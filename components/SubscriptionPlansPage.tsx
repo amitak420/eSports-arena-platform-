@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Page, useAppContext } from '../App';
 import { SUBSCRIPTION_PLANS } from '../constants';
-import { updateUser } from '../services/mockFirebase';
+import { updateUserByUid } from '../services/mockFirebase';
 import { BackIcon, CheckIcon } from './icons/UIIcons';
 
 interface SubscriptionPlansPageProps {
@@ -48,7 +48,7 @@ const SubscriptionPlansPage: React.FC<SubscriptionPlansPageProps> = ({ setCurren
       endDate: new Date(new Date().setFullYear(new Date().getFullYear() + 1)), // Mock 1 year
     };
     
-    const updatedUser = updateUser(currentUser.name, { subscription: newSubscription });
+    const updatedUser = updateUserByUid(currentUser.uid, { subscription: newSubscription });
     if(updatedUser) {
         setCurrentUser(updatedUser);
         alert(`Successfully subscribed to the ${planId} plan!`);

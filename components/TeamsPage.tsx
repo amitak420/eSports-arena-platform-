@@ -24,7 +24,8 @@ const TeamCard: React.FC<{team: Team, onJoin: () => void}> = ({ team, onJoin }) 
 const NoTeamView: React.FC = () => {
     const { updateCurrentUser, currentUser } = useAppContext();
     
-    const handleJoin = (teamId: number) => {
+    // FIX: Changed teamId type from number to string to match the Team type.
+    const handleJoin = (teamId: string) => {
         alert(`Request sent to join team!`);
         // In a real app, this would be an async request.
         // For demo, we can't actually change teams this way yet.

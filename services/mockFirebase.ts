@@ -37,15 +37,20 @@ saveDB(db); // Save initial state if it doesn't exist
 
 // --- USER FUNCTIONS ---
 
-export function getUser(name: string): User | undefined {
+export function getUserByName(name: string): User | undefined {
   return db.users.find(u => u.name.toLowerCase() === name.toLowerCase());
 }
 
-export function createUser(name: string, role: 'player' | 'organizer' | 'admin'): User {
-  const existingUser = getUser(name);
+export function getUserByUid(uid: string): User | undefined {
+  return db.users.find(u => u.uid === uid);
+}
+
+export function createUserByName(name: string, role: 'player' | 'organizer' | 'admin'): User {
+  const existingUser = getUserByName(name);
   if (existingUser) return existingUser;
 
   const newUser: User = {
+    uid: `mock_${name.toLowerCase().replace(/\s/g, '')}`,
     name,
     role,
     subscription: null,
@@ -53,18 +58,41 @@ export function createUser(name: string, role: 'player' | 'organizer' | 'admin')
     achievements: [],
     joinedTournaments: [],
     gameId: `${name}#${Math.floor(1000 + Math.random() * 9000)}`,
-    // FIX: Initialize new optional fields
     favoriteGames: [],
-    teamId: name === 'Player1' ? 1 : undefined, // For demo purposes
-    teamRole: name === 'Player1' ? 'captain' : undefined, // For demo purposes
+    teamId: name === 'Player1' ? '1' : undefined,
+    teamRole: name === 'Player1' ? 'captain' : undefined,
   };
   db.users.push(newUser);
   saveDB(db);
   return newUser;
 }
 
-export function updateUser(name: string, updates: Partial<User>): User | undefined {
-    const userIndex = db.users.findIndex(u => u.name.toLowerCase() === name.toLowerCase());
+export function createUserWithUid(uid: string, role: 'player' | 'organizer' | 'admin' = 'player'): User {
+  const existingUser = getUserByUid(uid);
+  if (existingUser) return existingUser;
+
+  const name = `Player${uid.slice(-4)}`;
+
+  const newUser: User = {
+    uid,
+    name,
+    role,
+    subscription: null,
+    wallet: { balance: 1000, transactions: [] },
+    achievements: [],
+    joinedTournaments: [],
+    gameId: `${name}#${Math.floor(1000 + Math.random() * 9000)}`,
+    favoriteGames: [],
+    teamId: undefined,
+    teamRole: undefined,
+  };
+  db.users.push(newUser);
+  saveDB(db);
+  return newUser;
+}
+
+export function updateUserByUid(uid: string, updates: Partial<User>): User | undefined {
+    const userIndex = db.users.findIndex(u => u.uid === uid);
     if (userIndex > -1) {
         db.users[userIndex] = { ...db.users[userIndex], ...updates };
         saveDB(db);
@@ -80,14 +108,14 @@ export function getTournaments(): Tournament[] {
   return db.tournaments.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 }
 
-export function getTournamentById(id: number): Tournament | undefined {
+export function getTournamentById(id: string): Tournament | undefined {
     return db.tournaments.find(t => t.id === id);
 }
 
 export function addTournament(tournament: Omit<Tournament, 'id'>) {
   const newTournament: Tournament = {
     ...tournament,
-    id: Date.now(), // Simple unique ID for mock purposes
+    id: Date.now().toString(), // Simple unique ID for mock purposes
   };
   db.tournaments.push(newTournament);
   saveDB(db);

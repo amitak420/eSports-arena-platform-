@@ -10,7 +10,7 @@ export const GAMES: Game[] = [
 
 export const MOCK_TOURNAMENTS: Tournament[] = [
   {
-    id: 1,
+    id: '1',
     organizerName: 'Mortal',
     game: GAMES[0],
     name: 'Morning Mayhem BGMI',
@@ -24,7 +24,7 @@ export const MOCK_TOURNAMENTS: Tournament[] = [
     status: 'upcoming',
   },
   {
-    id: 2,
+    id: '2',
     organizerName: 'Pro Leaguers',
     game: GAMES[1],
     name: 'Valorant Vipers Weekly',
@@ -37,7 +37,7 @@ export const MOCK_TOURNAMENTS: Tournament[] = [
     status: 'upcoming',
   },
   {
-    id: 3,
+    id: '3',
     organizerName: 'Mortal',
     game: GAMES[2],
     name: 'Free Fire Frenzy',
@@ -50,7 +50,7 @@ export const MOCK_TOURNAMENTS: Tournament[] = [
     status: 'ongoing',
   },
    {
-    id: 4,
+    id: '4',
     organizerName: 'Pro Leaguers',
     game: GAMES[3],
     name: 'COD Mobile Solo King',
@@ -93,19 +93,19 @@ export const SUBSCRIPTION_PLANS: SubscriptionPlan[] = [
 
 export const MOCK_MATCH_DATA: MatchData[] = [
   // Clean Player
-  { matchId: 'm1', tournamentId: 4, playerName: 'Player1', kills: 8, deaths: 2, headshotPercentage: 40, accuracy: 35, previousMatchAccuracy: 33, hasReplay: true, ipAddress: '1.1.1.1' },
+  { matchId: 'm1', tournamentId: '4', playerName: 'Player1', kills: 8, deaths: 2, headshotPercentage: 40, accuracy: 35, previousMatchAccuracy: 33, hasReplay: true, ipAddress: '1.1.1.1' },
   // Highly Suspicious Player
-  { matchId: 'm2', tournamentId: 4, playerName: 'CheaterX', kills: 25, deaths: 1, headshotPercentage: 92, accuracy: 85, previousMatchAccuracy: 25, hasReplay: false, ipAddress: '2.2.2.2' },
+  { matchId: 'm2', tournamentId: '4', playerName: 'CheaterX', kills: 25, deaths: 1, headshotPercentage: 92, accuracy: 85, previousMatchAccuracy: 25, hasReplay: false, ipAddress: '2.2.2.2' },
   // Moderately Suspicious
-  { matchId: 'm3', tournamentId: 4, playerName: 'MaybeSus', kills: 15, deaths: 3, headshotPercentage: 75, accuracy: 60, previousMatchAccuracy: 55, hasReplay: false, ipAddress: '3.3.3.3' },
+  { matchId: 'm3', tournamentId: '4', playerName: 'MaybeSus', kills: 15, deaths: 3, headshotPercentage: 75, accuracy: 60, previousMatchAccuracy: 55, hasReplay: false, ipAddress: '3.3.3.3' },
    // Another Clean Player
-  { matchId: 'm4', tournamentId: 4, playerName: 'FairPlayer', kills: 10, deaths: 3, headshotPercentage: 30, accuracy: 40, previousMatchAccuracy: 41, hasReplay: true, ipAddress: '4.4.4.4' },
+  { matchId: 'm4', tournamentId: '4', playerName: 'FairPlayer', kills: 10, deaths: 3, headshotPercentage: 30, accuracy: 40, previousMatchAccuracy: 41, hasReplay: true, ipAddress: '4.4.4.4' },
 ];
 
 // FIX: Add missing MOCK_TEAMS export
 export const MOCK_TEAMS: Team[] = [
-    { id: 1, name: 'Soul Reapers', tag: 'SR', members: [{ name: 'Player1', role: 'captain' }, { name: 'FairPlayer', role: 'member' }], stats: { rank: 5, wins: 12, earnings: 15000 } },
-    { id: 2, name: 'GodLike Esports', tag: 'GLE', members: [{ name: 'CheaterX', role: 'captain' }], stats: { rank: 1, wins: 50, earnings: 100000 } },
+    { id: '1', name: 'Soul Reapers', tag: 'SR', members: [{ name: 'Player1', role: 'captain' }, { name: 'FairPlayer', role: 'member' }], stats: { rank: 5, wins: 12, earnings: 15000 } },
+    { id: '2', name: 'GodLike Esports', tag: 'GLE', members: [{ name: 'CheaterX', role: 'captain' }], stats: { rank: 1, wins: 50, earnings: 100000 } },
 ];
 
 // FIX: Add missing MOCK_LEADERBOARD export

@@ -1,7 +1,7 @@
 import React from 'react';
 
 export interface Tournament {
-  id: number;
+  id: string;
   organizerName: string;
   game: Game;
   name: string;
@@ -66,6 +66,7 @@ export interface UserAchievement {
 }
 
 export interface User {
+  uid: string;
   name: string;
   role: 'player' | 'organizer' | 'admin';
   avatarUrl?: string | null;
@@ -73,16 +74,16 @@ export interface User {
   subscription: UserSubscription | null;
   wallet: UserWallet;
   achievements: UserAchievement[];
-  joinedTournaments: number[];
+  joinedTournaments: string[];
   // FIX: Add missing properties to User type
   favoriteGames?: string[];
-  teamId?: number;
+  teamId?: string;
   teamRole?: 'captain' | 'member';
 }
 
 export interface MatchData {
   matchId: string;
-  tournamentId: number;
+  tournamentId: string;
   playerName: string;
   kills: number;
   deaths: number;
@@ -110,12 +111,12 @@ export interface Notification {
   message: string;
   timestamp: Date;
   read: boolean;
-  tournamentId?: number;
+  tournamentId?: string;
 }
 
 // FIX: Add missing Team type
 export interface Team {
-  id: number;
+  id: string;
   name: string;
   tag: string;
   members: { name: string; role: 'captain' | 'member' }[];
@@ -139,7 +140,7 @@ export interface LeaderboardEntry {
 // FIX: Add missing TeamLeaderboardEntry type
 export interface TeamLeaderboardEntry {
   rank: number;
-  team: { id: number; name: string; tag: string; };
+  team: { id: string; name: string; tag: string; };
   metric: 'Earnings' | 'Wins';
   value: number;
 }

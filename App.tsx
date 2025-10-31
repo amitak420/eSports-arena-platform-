@@ -1,4 +1,5 @@
 import React, { useState, createContext, useContext, useEffect } from 'react';
+import { User as FirebaseUser } from 'firebase/auth';
 import Layout from './components/Layout';
 import Home from './components/Home';
 import TournamentListPage from './components/TournamentListPage';
@@ -11,7 +12,8 @@ import AdminDashboard from './components/AdminDashboard';
 import CreateTournamentWizard from './components/CreateTournamentWizard';
 import SubscriptionPlansPage from './components/SubscriptionPlansPage';
 import { Tournament, User, Notification } from './types';
-import { getUser, createUser } from './services/mockFirebase';
+import { getUserByName, createUserByName } from './services/mockFirebase';
+import { getOrCreateUser } from './services/firestoreService';
 // FIX: Import new page components
 import LeaderboardPage from './components/LeaderboardPage';
 import TeamsPage from './components/TeamsPage';
@@ -51,7 +53,7 @@ const AppProvider: React.FC<{children: React.ReactNode}> = ({ children }) => {
 
     useEffect(() => {
         // Auto-login mock user for faster development/testing
-        const user = getUser("Player1");
+        const user = getUserByName("Player1");
         if(user) setCurrentUser(user);
     }, []);
 
@@ -104,10 +106,10 @@ const MainApp: React.FC = () => {
     setCurrentPage('tournament-detail');
   };
 
-  const handleAuth = (authData: {name: string, role: 'player' | 'organizer' | 'admin'}) => {
-      let user = getUser(authData.name);
+  const handleDemoAuth = (authData: {name: string, role: 'player' | 'organizer' | 'admin'}) => {
+      let user = getUserByName(authData.name);
       if (!user) {
-          user = createUser(authData.name, authData.role);
+          user = createUserByName(authData.name, authData.role);
       } else if (user.role !== authData.role) {
           // For demo, allow role switching on login
           user.role = authData.role;
@@ -117,6 +119,20 @@ const MainApp: React.FC = () => {
       // Navigate to the correct dashboard after login
       setCurrentPage(`${authData.role}-dashboard` as Page);
   }
+  
+  const handleFirebaseAuthSuccess = async (firebaseUser: FirebaseUser) => {
+    try {
+      const userProfile = await getOrCreateUser(firebaseUser);
+      setCurrentUser(userProfile);
+      closeAuthModal();
+      // Default to player dashboard after phone login
+      setCurrentPage(`${userProfile.role}-dashboard` as Page);
+    } catch (error) {
+      console.error("Error handling auth success:", error);
+      // Optionally: show an error message to the user
+    }
+  };
+
 
   const renderPage = () => {
     const pageProps = { setCurrentPage, viewTournamentDetail };
@@ -131,7 +147,7 @@ const MainApp: React.FC = () => {
         // FIX: Corrected typo from 'page_props' to 'pageProps'.
         return <TournamentDetailPage tournament={selectedTournament!} {...pageProps} isJoinFlow={true} />;
       case 'player-dashboard':
-        return <PlayerDashboard setCurrentPage={setCurrentPage}/>;
+        return <PlayerDashboard {...pageProps} />;
       case 'organizer-dashboard':
         return <OrganizerDashboard setCurrentPage={setCurrentPage} />;
       case 'admin-dashboard':
@@ -165,7 +181,8 @@ const MainApp: React.FC = () => {
       {isAuthModalOpen && (
           <AuthModal 
             onClose={closeAuthModal} 
-            onAuth={handleAuth}
+            onAuth={handleDemoAuth}
+            onFirebaseAuthSuccess={handleFirebaseAuthSuccess}
           />
       )}
     </div>

@@ -3,7 +3,7 @@ import { GAMES } from '../constants';
 import TournamentCard from './TournamentCard';
 import { Page } from '../App';
 import { Tournament } from '../types';
-import { getTournaments } from '../services/mockFirebase';
+import { getTournamentsStream } from '../services/firestoreService';
 
 interface TournamentListPageProps {
   setCurrentPage: (page: Page) => void;
@@ -12,10 +12,20 @@ interface TournamentListPageProps {
 
 const TournamentListPage: React.FC<TournamentListPageProps> = ({ viewTournamentDetail }) => {
   const [tournaments, setTournaments] = useState<Tournament[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch tournaments from our mock local storage service
-    setTournaments(getTournaments());
+    setLoading(true);
+    // Subscribe to the real-time tournament stream from Firestore
+    const unsubscribe = getTournamentsStream((fetchedTournaments) => {
+      // Sort tournaments by start time
+      const sorted = fetchedTournaments.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+      setTournaments(sorted);
+      setLoading(false);
+    });
+
+    // Unsubscribe when the component unmounts to prevent memory leaks
+    return () => unsubscribe();
   }, []);
 
 
@@ -30,11 +40,17 @@ const TournamentListPage: React.FC<TournamentListPageProps> = ({ viewTournamentD
             ))}
         </div>
 
-        <div className="space-y-3">
-            {tournaments.map(tournament => (
-                <TournamentCard key={tournament.id} tournament={tournament} onViewDetail={viewTournamentDetail} />
-            ))}
-        </div>
+        {loading ? (
+            <div className="text-center py-10 text-white">
+                <p>Loading Tournaments...</p>
+            </div>
+        ) : (
+            <div className="space-y-3">
+                {tournaments.map(tournament => (
+                    <TournamentCard key={tournament.id} tournament={tournament} onViewDetail={viewTournamentDetail} />
+                ))}
+            </div>
+        )}
     </div>
   );
 };
